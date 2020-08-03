@@ -1,3 +1,6 @@
+#All rights reserved Opensource ICT Solutions B.V.
+#Free to redistribute with mention to Opensource ICT Solutions
+
 ####
 #For use with Zabbix
 #Place in directory
