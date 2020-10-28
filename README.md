@@ -8,3 +8,5 @@ snmpparser.sh for bash
 
 snmptrap-parser.py for python
 
+For more info on how to install check out the tutorial:
+https://blog.zabbix.com/parsing-snmp-traps-with-python-or-bash-a-net-snmp-perl-alternative/11577/
