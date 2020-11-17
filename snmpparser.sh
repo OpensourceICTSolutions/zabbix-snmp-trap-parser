@@ -29,4 +29,4 @@ stringarray=($sourceAndDest)
 source=${stringarray[0]} 
 destination=${stringarray[1]}
 
-printf "%(%H:%M:%S %Y/%m/%d)T ZBXTRAP $destination \r\n $NUM \r\n $host \r\n $ip \r\n $vars\r\n">> /tmp/zabbix_traps.tmp
+printf "%(%H:%M:%S %Y/%m/%d)T ZBXTRAP $source \r\n $NUM \r\n $host \r\n $ip \r\n $vars\r\n">> /tmp/zabbix_traps.tmp
