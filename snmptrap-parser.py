@@ -4,7 +4,7 @@
 # Copyright 2021 Opensource ICT Solutions B.V.
 # https://oicts.com
 #
-#version: 1.0.0
+#version: 2.0.0
 #date: 11-02-2021
 #
 #All rights reserved Opensource ICT Solutions B.V.
@@ -27,34 +27,35 @@
 # Place in directory
 # Update snmptrapd.conf to use this script:
 #  disableAuthorization yes
-#  traphandle default /usr/bin/python <location of this script>
+#  traphandle default /usr/bin/python3.6 <location of this script>
 # And start Zabbix stuffs
 
 import re
 import sys
 import time
+import subprocess
 
+# Trap write location:
+destination = "/tmp/snmptrap.log"  # File destination
 
-def main():
-    destination = "/tmp/zbx_traps.tmp"  # File destination
+# Getting Trap
+trap = sys.stdin.readlines()  # Read from stdin
+trap.pop(0)
+result = "" #Declare empty variable
+r = "".join(trap)  # Convert LIST to STRING
 
-    # Getting Trap
-    trap = sys.stdin.readlines()  # Read from stdin
-    r = "".join(trap)  # Convert LIST to STRING
+# Format the time string
+time = time.strftime("%H:%M:%S %Y/%m/%d")
+time = str(time)
 
-    # Format the time string
-    formatted_time = str(time.strftime("%H:%M:%S %Y/%m/%d"))
+# Matching on IPaddress
+source = re.findall('UDP:.\[([\d.+]+)\]' ,r)
 
-    # Matching on IPaddress
-    source = re.findall(".snmpTrapAddress.0 ([\d.+]+)", r)[0]
+# Building the HEADER so that Zabbix understands it
+HEADER = ''.join(source)
+IP = str(source).strip("[]'")
+HEADER = time + " ZBXTRAP  " +  str(IP)
 
-    # Building the HEADER so that Zabbix understands it
-    header = "{0} ZBXTRAP  {1}".format(formatted_time, source)
-
-    # Appending it to the log file for Zabbix to pickup
-    with open(destination, "a") as file:
-        file.write("{0}\n{1}".format(header, "".join(trap)))
-
-
-if __name__ == "__main__":
-    main()
+# Appending it to the log file for Zabbix to pickup
+with open(destination, "a") as file:
+    file.write (HEADER + "\n" + r)
